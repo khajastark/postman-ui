@@ -3,76 +3,80 @@ import './App.css';
 
 function App() {
   const [url, setUrl] = useState('');
+  const [requestBody, setRequestBody] = useState('');
   const [response, setResponse] = useState('');
   const [selectedApp, setSelectedApp] = useState('appA');
 
   const handleSendRequest = () => {
-    // Simulate different responses based on selectedApp
-    let simulatedResponse;
+    let mockResponse;
     switch (selectedApp) {
       case 'appA':
-        simulatedResponse = 'Simulated response from appA';
+        mockResponse = { message: 'Response from appA', data: { key: 'valueA' } };
         break;
       case 'appACQ':
-        simulatedResponse = 'Simulated response from appACQ';
+        mockResponse = { message: 'Response from appACQ', data: { key: 'valueACQ' } };
         break;
       case 'all':
-        simulatedResponse = 'Simulated response from all apps';
+        mockResponse = { message: 'Response from all', data: { key: 'valueAll' } };
         break;
       default:
-        simulatedResponse = 'Invalid app selected';
+        mockResponse = { message: 'Unknown app', data: {} };
     }
-    setResponse(simulatedResponse);
+    setResponse(JSON.stringify(mockResponse, null, 2));
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Postman-like UI</h1>
-      </header>
-      <div className="main-container">
-        <input
-          type="text"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="Enter URL"
-          className="url-input"
-        />
-        <div className="radio-buttons">
-          <label>
-            <input
-              type="radio"
-              value="appA"
-              checked={selectedApp === 'appA'}
-              onChange={(e) => setSelectedApp(e.target.value)}
-            />
+    <div className="container">
+      <div className="header">
+        API Testing Tool
+      </div>
+      <div className="controls">
+        <div className="url-container">
+          <input
+            type="text"
+            className="url-bar"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="Enter URL"
+          />
+          <button className="send-button" onClick={handleSendRequest}>
+            Send
+          </button>
+        </div>
+        <div className="options">
+          <button
+            className={`option-button ${selectedApp === 'appA' ? 'active' : ''}`}
+            onClick={() => setSelectedApp('appA')}
+          >
             appA
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="appACQ"
-              checked={selectedApp === 'appACQ'}
-              onChange={(e) => setSelectedApp(e.target.value)}
-            />
+          </button>
+          <button
+            className={`option-button ${selectedApp === 'appACQ' ? 'active' : ''}`}
+            onClick={() => setSelectedApp('appACQ')}
+          >
             appACQ
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="all"
-              checked={selectedApp === 'all'}
-              onChange={(e) => setSelectedApp(e.target.value)}
-            />
-            All
-          </label>
+          </button>
+          <button
+            className={`option-button ${selectedApp === 'all' ? 'active' : ''}`}
+            onClick={() => setSelectedApp('all')}
+          >
+            all
+          </button>
         </div>
-        <button onClick={handleSendRequest} className="send-button">
-          Send
-        </button>
-        <div className="response-container">
-          <pre>{response}</pre>
-        </div>
+      </div>
+      <div className="content">
+        <textarea
+          className="request-body"
+          value={requestBody}
+          onChange={(e) => setRequestBody(e.target.value)}
+          placeholder="Enter request body"
+        />
+        <textarea
+          className="response-box"
+          value={response}
+          readOnly
+          placeholder="Response will appear here"
+        />
       </div>
     </div>
   );
