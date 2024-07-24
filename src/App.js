@@ -1,35 +1,31 @@
 import React, { useState } from 'react';
 import './App.css';
+import axios from 'axios'; // Uncomment if using axios
 
 function App() {
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState('http://localhost:8080/appapplics'); // Default URL for your API
   const [requestBody, setRequestBody] = useState('');
   const [response, setResponse] = useState('');
   const [selectedApp, setSelectedApp] = useState('appA');
 
-  const handleSendRequest = () => {
-    let mockResponse;
-    switch (selectedApp) {
-      case 'appA':
-        mockResponse = { message: 'Response from appA', data: { key: 'valueA' } };
-        break;
-      case 'appACQ':
-        mockResponse = { message: 'Response from appACQ', data: { key: 'valueACQ' } };
-        break;
-      case 'all':
-        mockResponse = { message: 'Response from all', data: { key: 'valueAll' } };
-        break;
-      default:
-        mockResponse = { message: 'Unknown app', data: {} };
+  const handleSendRequest = async () => {
+    try {
+      // Using axios to send the request
+      const res = await axios.post(url, requestBody, {
+        headers: {
+         'Content-Type': 'text/plain',
+        },
+      });
+      setResponse(JSON.stringify(res.data, null, 2));
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setResponse('Error fetching data');
     }
-    setResponse(JSON.stringify(mockResponse, null, 2));
   };
 
   return (
     <div className="container">
-      <div className="header">
-        API Testing Tool
-      </div>
+      <div className="header">API Testing Tool</div>
       <div className="controls">
         <div className="url-container">
           <input
